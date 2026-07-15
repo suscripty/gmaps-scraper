@@ -867,7 +867,27 @@ class ParserTests(unittest.TestCase):
             parsed.places[1].added_by.to_dict() if parsed.places[1].added_by else None,
             {"name": "Name Only Collaborator"},
         )
+        
+    def test_accepts_owner_records_with_extra_trailing_fields(self) -> None:
+        runtime_state = copy.deepcopy(["noise", _LIST_NODE])
+        runtime_state[1][3] = [
+            "Fixture Owner",
+            "https://lh3.googleusercontent.com/a-/fixture-owner",
+            "104356373423434804635",
+            "unexpected_verification_flag",
+        ]
 
+        parsed = parse_saved_list_artifacts(_LIST_URL, runtime_state=runtime_state)
+
+        self.assertEqual(
+            parsed.owner.to_dict() if parsed.owner else None,
+            {
+                "name": "Fixture Owner",
+                "photo_url": "https://lh3.googleusercontent.com/a-/fixture-owner",
+                "profile_id": "104356373423434804635",
+            },
+        )
+        
     def test_filters_sparse_owner_from_collaborators(self) -> None:
         runtime_state = copy.deepcopy(["noise", _LIST_NODE])
         first_place = runtime_state[1][8][0]
