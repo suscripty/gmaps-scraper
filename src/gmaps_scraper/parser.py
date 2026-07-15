@@ -375,7 +375,7 @@ def _merge_owner_lists(
 
 
 def _parse_list_owner(node: JSONValue | None) -> ListOwner | None:
-    if not isinstance(node, list) or len(node) < 1 or len(node) > 3:
+    if not isinstance(node, list) or len(node) < 1:
         return None
 
     name = _clean_text(_safe_index(node, 0))
